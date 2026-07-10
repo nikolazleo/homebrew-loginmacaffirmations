@@ -2,7 +2,7 @@
 
 Homebrew tap *and* source for `loginmacaffirmations`, a small service that
 rotates your macOS login window text through affirmations (or any message)
-pulled from an HTTP API. Everything -- the formula, the updater script, and
+pulled from an HTTP API to automate positive vibes. Everything -- the formula, the updater script, and
 a manual (non-Homebrew) install path -- lives in this one repo.
 
 ## Install
