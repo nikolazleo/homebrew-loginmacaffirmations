@@ -1,8 +1,9 @@
 # homebrew-loginmacaffirmations
 
-Homebrew tap for [`loginmacaffirmations`](https://github.com/nikolazleo/LoginwindowText-Updater), a small
-service that rotates your macOS login window text through affirmations (or
-any message) pulled from an HTTP API.
+Homebrew tap *and* source for `loginmacaffirmations`, a small service that
+rotates your macOS login window text through affirmations (or any message)
+pulled from an HTTP API. Everything -- the formula, the updater script, and
+a manual (non-Homebrew) install path -- lives in this one repo.
 
 ## Install
 
@@ -54,13 +55,45 @@ brew uninstall loginmacaffirmations
 brew untap nikolazleo/loginmacaffirmations
 ```
 
+## Manual install (without Homebrew)
+
+If you'd rather not use Homebrew, [`steps.sh`](steps.sh) performs an
+equivalent manual install using a privileged helper and a scoped sudoers
+rule instead of a root-owned LaunchDaemon:
+
+```bash
+git clone https://github.com/nikolazleo/homebrew-loginmacaffirmations.git
+cd homebrew-loginmacaffirmations
+zsh steps.sh
+```
+
+Before running it, edit the configurable variables (`USER_NAME`, `API_URLS`,
+`API_AUTH_HEADERS`, `CRON_INTERVAL_SECONDS`) at the top of the script. It
+installs a root-owned helper (`/usr/local/sbin/set-loginmessage`), a
+narrowly-scoped sudoers rule, and a per-user LaunchAgent that fetches,
+rotates, and applies a message at login and on a schedule. See the comments
+in `steps.sh` for the full breakdown of what it installs and how to
+uninstall.
+
+## Security notes
+
+- **Homebrew path**: the LaunchDaemon runs `bin/update-lock-message.sh`
+  fully as root (since it's started via `sudo brew services start`), so
+  there's no separate privileged helper or sudoers rule to review -- the
+  script itself is the trusted boundary. Read it before pointing `API_URLS`
+  at anything you don't control.
+- **Manual path**: the sudoers entry is scoped to `set-loginmessage` with
+  arbitrary arguments, which is sufficient because the helper only writes a
+  plist and restarts `cfprefsd`. Review `steps.sh` before deployment if you
+  require stricter guarantees.
+- Consider pointing `API_URLS` at internal services or static JSON files if
+  you do not control the remote endpoints.
+
 ## Formula source
 
-See [`Formula/loginmacaffirmations.rb`](Formula/loginmacaffirmations.rb).
-For the full source, manual (non-Homebrew) install instructions, and
-security notes, see the
-[LoginwindowText-Updater](https://github.com/nikolazleo/LoginwindowText-Updater)
-repository.
+See [`Formula/loginmacaffirmations.rb`](Formula/loginmacaffirmations.rb),
+[`bin/update-lock-message.sh`](bin/update-lock-message.sh), and
+[`config/loginmacaffirmations.example`](config/loginmacaffirmations.example).
 
 ## License
 
