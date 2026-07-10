@@ -1,9 +1,9 @@
 class Loginmacaffirmations < Formula
   desc "Rotate macOS login window text with affirmations pulled from an API"
-  homepage "https://github.com/nikolazleo/LoginwindowText-Updater"
-  url "https://github.com/nikolazleo/LoginwindowText-Updater.git",
-      revision: "876ce7d572bfe10fe7e9b94f10172ad930b48260"
-  version "1.0.0"
+  homepage "https://github.com/nikolazleo/homebrew-loginmacaffirmations"
+  url "https://github.com/nikolazleo/homebrew-loginmacaffirmations.git",
+      revision: "8fcde51ae9527cc593b0049ea08bed5ea80ca5ec"
+  version "1.1.0"
   license "MIT"
 
   def install
@@ -33,7 +33,9 @@ class Loginmacaffirmations < Formula
   def caveats
     <<~EOS
       loginmacaffirmations writes a root-owned system preference
-      (LoginwindowText), so the service must be run as root:
+      (LoginwindowText) and ensures login window text is enabled
+      (DisableLoginwindowText is cleared on every run), so the service must
+      be run as root:
         sudo brew services start loginmacaffirmations
 
       Out of the box it rotates a default affirmation source

@@ -1,0 +1,34 @@
+# Configuration for update-lock-message.sh (loginMacAffirmations).
+#
+# When installed via Homebrew, this file is copied to
+# /usr/local/etc/loginmacaffirmations/config (or the equivalent under your
+# Homebrew prefix) on first install and is yours to edit -- reinstalling the
+# formula will not overwrite an existing config.
+#
+# After editing, restart the service so the change takes effect:
+#   sudo brew services restart loginmacaffirmations
+
+# One or more API sources to alternate between. On each run the updater
+# rotates to the next source and skips re-applying a message identical to
+# the last one shown. Each source should return either a plain-text body or
+# a JSON object/array with the text under one of: message, msg, text, value,
+# affirmation.
+API_URLS=(
+  "https://www.affirmations.dev/"      # returns JSON like {"affirmation":"..."}
+  # "https://your-second-api.example.com/message"   # add more sources here to rotate between them
+)
+
+# Optional per-source auth headers. Must be the same length as API_URLS; use
+# "" for sources that need no auth header, e.g. 'Authorization: Bearer xyz'.
+API_AUTH_HEADERS=(
+  ""
+  # ""
+)
+
+# Scheduled refresh interval, in seconds, in addition to at-login refresh.
+# NOTE: this value is informational only for the Homebrew-managed service --
+# the LaunchDaemon's interval is fixed by the formula's `service` block. To
+# change the actual schedule, edit
+# /Library/LaunchDaemons/homebrew.mxcl.loginmacaffirmations.plist directly and
+# reload it (see the README's "Customising the Schedule" section).
+CRON_INTERVAL_SECONDS=3600
